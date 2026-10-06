@@ -1,0 +1,57 @@
+-- Core operational measures
+Completed Visits =
+SUM('OpsTherapistMonthly'[CompletedAppointments])
+
+Scheduled Visits =
+SUM('OpsTherapistMonthly'[ScheduledAppointments])
+
+Cancelled Visits =
+SUM('OpsTherapistMonthly'[CancelledAppointments])
+
+No Show Visits =
+SUM('OpsTherapistMonthly'[NoShowAppointments])
+
+Completion Rate =
+DIVIDE([Completed Visits], [Scheduled Visits])
+
+Cancellation Rate =
+DIVIDE([Cancelled Visits], [Scheduled Visits])
+
+No Show Rate =
+DIVIDE([No Show Visits], [Scheduled Visits])
+
+Treatment Minutes =
+SUM('OpsTherapistMonthly'[TotalCompletedMinutes])
+
+-- Revenue cycle measures
+Total Billed =
+SUM('BillingPayerMonthly'[TotalBilledAmount])
+
+Total Collected =
+SUM('BillingPayerMonthly'[TotalCollectedAmount])
+
+Outstanding AR =
+SUM('BillingPayerMonthly'[OutstandingAmount])
+
+Collection Rate =
+DIVIDE([Total Collected], [Total Billed])
+
+Avg Days to Payment =
+DIVIDE(
+    SUMX(
+        'BillingPayerMonthly',
+        'BillingPayerMonthly'[AvgDaysToPayment] *
+        'BillingPayerMonthly'[PaymentCount]
+    ),
+    SUM('BillingPayerMonthly'[PaymentCount])
+)
+
+Paid Within 30 Days % =
+DIVIDE(
+    SUMX(
+        'BillingPayerMonthly',
+        'BillingPayerMonthly'[PercentPaidWithin30Days] *
+        'BillingPayerMonthly'[InvoiceCount]
+    ),
+    SUM('BillingPayerMonthly'[InvoiceCount])
+)
